@@ -6,7 +6,7 @@ def connect_tasks_db():
     cursor = db_connect.cursor()
     return db_connect , cursor
 
-table_name ='worktodo'
+table_name ='Tasks'
 
 
 def create_table():
