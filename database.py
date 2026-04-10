@@ -6,15 +6,19 @@ def connect_tasks_db():
     cursor = db_connect.cursor()
     return db_connect , cursor
 
+table_name ='worktodo'
+
+
 def create_table():
     db_connect , cursor = connect_tasks_db()
-    command1 = """
-                    CREATE TABLE IF NOT EXISTS Tasks 
+    command1 = f"""
+                    CREATE TABLE IF NOT EXISTS {table_name} 
                    (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     title TEXT NOT NULL,
                     status TEXT NOT NULL,
                     created_at TEXT NOT NULL
+                    
                    )
                    """
     cursor.execute(command1)
@@ -24,35 +28,35 @@ def add_task(title):
     db_connect , cursor = connect_tasks_db()
     status = 'Pending'
     created_at = datetime.now()
-    command2 = """
-                INSERT INTO Tasks(title,status,created_at) 
+    command2 = f"""
+                INSERT INTO {table_name}(title,status,created_at) 
                 values(?,?,?)
                    """ 
-    cursor.execute(command2,(title,status,created_at))
     
+    cursor.execute(command2,(title,status,created_at))    
     db_connect.commit()
     print("\nTask is added succesfullly")
     
     
-def view_task():
+def view_tasks():
     db_connect , cursor = connect_tasks_db()
-    command3 = """SELECT * FROM Tasks"""
+    command3 = f"""SELECT * FROM {table_name}"""
     total_tasks = cursor.execute(command3).fetchall()
 
     if total_tasks ==[]:
-        print("No tasks have been added")
+        print("\nNo tasks have been added")
 
     else:
         print(total_tasks)
 
-def update_task(task_id):
+def update_task(new_title,task_id):
     db_connect , cursor = connect_tasks_db()
     
-    cursor.execute("SELECT id FROM Tasks WHERE id=?",(task_id,))
+    cursor.execute(f"SELECT id FROM {table_name} WHERE id=?",(task_id,))
     results = cursor.fetchone()
     if results:
-        new_title=input("Enter the new title: ")
-        command4 = "UPDATE tasks SET title = ? WHERE id = ?"
+        
+        command4 = f"UPDATE {table_name} SET title = ? WHERE id = ?"
         cursor.execute(command4,(new_title,task_id))
         db_connect.commit()
         print("\nTask is updated succesfullly")
@@ -64,13 +68,13 @@ def update_task(task_id):
 
 def mark_task_completed(task_id):
     db_connect , cursor = connect_tasks_db()
-    cursor.execute("SELECT id FROM Tasks WHERE id=?",(task_id,))
+    cursor.execute(f"SELECT id FROM {table_name} WHERE id=?",(task_id,))
     results = cursor.fetchone()
     if results:
-        cursor.execute("SELECT status FROM Tasks WHERE id=?", (task_id,))
+        cursor.execute(f"SELECT status FROM {table_name} WHERE id=?", (task_id,))
         results1 = cursor.fetchone()
         if results1[0] == 'Pending':
-            command5 = "UPDATE tasks SET status = 'Completed' WHERE id = ?"
+            command5 = f"UPDATE {table_name} SET status = 'Completed' WHERE id = ?"
             cursor.execute(command5,(task_id,))
             db_connect.commit()
             print("\nStatus is updated to 'completed'")
@@ -82,10 +86,10 @@ def mark_task_completed(task_id):
     
 def delete_task(task_id):
     db_connect , cursor = connect_tasks_db()
-    cursor.execute("SELECT id FROM Tasks WHERE id=?",(task_id,))
+    cursor.execute(f"SELECT id FROM {table_name} WHERE id=?",(task_id,))
     results = cursor.fetchone()
     if results:
-        cursor.execute("DELETE FROM Tasks WHERE id=?", (task_id,))
+        cursor.execute(f"DELETE FROM {table_name} WHERE id=?", (task_id,))
         db_connect.commit()
         print("\nTask is deleted successfully")
     else:
@@ -94,10 +98,15 @@ def delete_task(task_id):
 
 def filter_tasks(status):
     db_connect , cursor = connect_tasks_db()    
-    command6 = "SELECT * FROM Tasks WHERE status=?"
-    
-    filter_tasks = cursor.execute(command6,(status,)).fetchall()
-    print(filter_tasks)
+    cursor.execute(f"SELECT status FROM {table_name} WHERE status=?",(status,))
+    results = cursor.fetchone()
+    if results:
+        command6 = f"SELECT * FROM {table_name} WHERE status=?"
+        
+        filter_tasks = cursor.execute(command6,(status,)).fetchall()
+        print(filter_tasks)
+    else:
+        print(f"\nThere is no tasks with {status} status")
     
     
 
