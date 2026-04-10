@@ -6,7 +6,7 @@ def connect_tasks_db():
     cursor = db_connect.cursor()
     return db_connect , cursor
 
-table_name ='Tasks'
+table_name ='work'
 
 
 def create_table():
@@ -16,6 +16,7 @@ def create_table():
                    (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     title TEXT NOT NULL,
+                    description TEXT,
                     status TEXT NOT NULL,
                     created_at TEXT NOT NULL
                     
@@ -24,16 +25,16 @@ def create_table():
     cursor.execute(command1)
     db_connect.commit()
 
-def add_task(title):
+def add_task(title,description):
     db_connect , cursor = connect_tasks_db()
     status = 'Pending'
     created_at = datetime.now()
     command2 = f"""
-                INSERT INTO {table_name}(title,status,created_at) 
-                values(?,?,?)
+                INSERT INTO {table_name}(title,description,status,created_at) 
+                values(?,?,?,?)
                    """ 
     
-    cursor.execute(command2,(title,status,created_at))    
+    cursor.execute(command2,(title,description,status,created_at))    
     db_connect.commit()
     print("\nTask is added succesfullly")
     

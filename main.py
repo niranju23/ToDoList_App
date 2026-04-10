@@ -27,7 +27,7 @@ while n!=7:
       if n not in range(1,8):
           print("\nYou chose the wrong number! Please choose the right option")
       elif n==1:
-        database.add_task(title=input("Enter the task name ").capitalize())
+        database.add_task(title=input("Enter the task name ").capitalize(),description=input("Enter the task description ").capitalize())
       elif n==2:
         database.view_tasks()
       elif(n==3):
