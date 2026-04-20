@@ -50,6 +50,7 @@ def create_tasks_table():
                     user_id INTEGER,
                     title TEXT NOT NULL,
                     description TEXT,
+                    priority TEXT,
                     status TEXT NOT NULL,
                     created_at TEXT NOT NULL,
                     due_date TEXT,
@@ -63,18 +64,19 @@ def create_tasks_table():
 
 
 
-def add_task(title,description,due_date,user_id):
+def add_task(title,description,priority,due_date,user_id):
     db_connect , cursor = connect_tasks_db()
     status = 'Pending'
     created_at = datetime.now()
     completed_on =''   
     
+    
     command2 = """
-                INSERT INTO Tasks(title,description,status,created_at,due_date,completed_on,user_id) 
-                values(?,?,?,?,?,?,?)
+                INSERT INTO Tasks(title,description,priority,status,created_at,due_date,completed_on,user_id) 
+                values(?,?,?,?,?,?,?,?)
                    """ 
     
-    cursor.execute(command2,(title,description,status,created_at,due_date,completed_on,user_id))    
+    cursor.execute(command2,(title,description,priority,status,created_at,due_date,completed_on,user_id))    
     db_connect.commit()
     print("\nTask is added succesfullly")
     
@@ -191,12 +193,12 @@ def filter_tasks(user_id,status):
 
 def search(user_id,keyword):
     db_connect,cursor = connect_tasks_db()    
-    cursor.execute("SELECT * FROM Tasks WHERE title like ? or description like ? or status like ? and user_id=?",("%" +keyword + "%","%" +keyword + "%","%" +keyword + "%",user_id))
+    cursor.execute("SELECT * FROM Tasks WHERE title like ? or description like ? or status like ? or priority like ? and user_id=?",("%" +keyword + "%","%" +keyword + "%","%" +keyword + "%","%" +keyword + "%",user_id))
     results = cursor.fetchall()
     if results:
         print(results)
     else:
-        print("\nThere are no such keyworods present")
+        print("\nThere are no such key words present")
     
 
 

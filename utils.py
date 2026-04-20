@@ -12,3 +12,12 @@ def validate_date(due_date):
         return False
     
 
+def validate_priority(priority):
+    if priority in ['low','medium','high']:
+        return True
+    else:
+        return False
+
+    
+    
+

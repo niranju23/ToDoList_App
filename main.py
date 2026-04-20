@@ -38,13 +38,21 @@ while n!=9:
       elif n==1:
         title=input("Enter the task name ").capitalize()
         description=input("Enter the task description ").capitalize()
+        
         while True:
-          due_date=input("Enter the due date DD/MM/YYYY ")
+           priority = input("Please enter the priority, low, medium or high?")
+           if utils.validate_priority(priority):
+              break
+           else:
+              print("please enter the correct priority value")
+              
+        while True:
+          due_date=input("Enter the due date YYYY-MM-DD")
           if utils.validate_date(due_date):
             break
           else:
             print("Invalid date format. Please use YYYY-MM-DD")
-        database.add_task(title,description,due_date,user_id)
+        database.add_task(title,description,priority,due_date,user_id)
            
         
         
@@ -71,7 +79,7 @@ while n!=9:
               
         else:
           print("\nNo tasks exist")
-          
+
 
       elif(n==4):
         database.mark_task_completed(user_id,task_id=int(input("Please enter the task id to change the status")))
